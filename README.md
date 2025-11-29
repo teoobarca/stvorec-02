@@ -2,68 +2,111 @@
 
 ![Banner](assets/banner.png)
 
-## Prečo sme to spravili?
+> **Future-proof your career with data-driven insights.**
 
-Úprimne? Báli sme sa.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)](https://fastapi.tiangolo.com/)
 
-Každý deň čítame o tom, ako AI nahradí programátorov, grafikov, copywriterov... nás. Namiesto paniky sme sa rozhodli pozrieť pravde do očí. Potrebovali sme nástroj, ktorý nám nedá len prázdne sľuby, ale tvrdé dáta.
+## 📖 About The Project
 
-**STVOREC-02** je výsledok našej paranoje a zvedavosti. Je to analytický nástroj, ktorý ti povie, či tvoja kariéra prežije rok 2030, a ak nie, čo s tým máš robiť.
+**STVOREC-02** is an advanced analytical tool designed to evaluate the resilience of various professions against the rising tide of Artificial Intelligence. 
 
----
+In an era of uncertainty, we provide clarity. By leveraging state-of-the-art Large Language Models (LLMs) and complex agentic workflows, STVOREC-02 decomposes job roles into their fundamental atomic units—tasks and skills—to provide a granular automation risk assessment.
 
-## Čo to vlastne robí?
+It doesn't just predict the future; it helps you navigate it.
 
-Neveštíme z gule. Používame **GPT-5.1** a komplexné analytické reťazce na to, aby sme pochopili podstatu tvojej práce.
+### Key Features
 
-### 1. Rozklad na súčiastky
-Tvoju prácu nerozumieme ako "názov pozície". Rozoberieme ju na stovky mikro-taskov a skillov. Vidíme to, čo ty možno prehliadaš.
-
-### 2. Realistické skóre automatizácie
-Žiadne "50% šanca". Ideme do hĺbky. Pre každý jeden task vypočítame pravdepodobnosť, že ho AI zvládne lepšie a lacnejšie ako ty. Výsledok? Číslo, ktoré možno zabolí, ale otvorí ti oči.
-
-### 3. Plán B (a C, a D...)
-Ak ti vyjde, že si nahraditeľný, nenecháme ťa v tom. Systém ti nájde príbuzné kariérne cesty, kde využiješ to, čo už vieš, ale v kontexte, ktorý AI (zatiaľ) nedokáže replikovať.
-
----
-
-## Ako to funguje pod kapotou?
-
-Sme vývojári, takže vieme, že "AI magic" nestačí. Tu je to, na čom to reálne beží:
-
-*   **Backend**: Python + FastAPI. Rýchle, typované, stabilné.
-*   **AI Orchestrácia**: LangChain. Nie je to len jeden prompt. Je to sústava agentov, ktorí sa navzájom kontrolujú a dopĺňajú.
-*   **Frontend**: Next.js 16 + Tailwind 4. Chceli sme, aby to nielen fungovalo, ale aby sa na to aj dobre pozeralo. Žiadne zbytočné loadery, všetko realtime streamované.
+*   **🔍 Deep Role Decomposition**: Breaks down any job title into granular tasks and skills for precise analysis.
+*   **🤖 AI Automation Scoring**: Calculates a weighted automation potential score based on current AI capabilities (powered by GPT-5.1).
+*   **🔮 Future Scenario Generation**: Simulates potential industry shifts by 2030, offering best, worst, and most likely case scenarios.
+*   **🧭 Strategic Career Pivots**: Identifies transferable skills and recommends viable career transitions to maximize long-term relevance.
 
 ---
 
-## Spusti si to u seba
+## 🛠️ Tech Stack
 
-Ak si chceš overiť, či nekecáme, kľudne si to buildni.
+This project is built with a modern, high-performance stack designed for scalability and real-time analysis.
 
-**Backend:**
+### Backend
+*   **Python 3.11+**: Core logic and data processing.
+*   **FastAPI**: High-performance async web framework.
+*   **LangChain**: Orchestration of complex AI agent workflows.
+*   **OpenAI GPT-5.1**: The underlying intelligence engine.
+
+### Frontend
+*   **Next.js 16**: React framework for production-grade applications.
+*   **Tailwind CSS 4**: Utility-first CSS framework for rapid UI development.
+*   **Framer Motion**: Production-ready motion library for React.
+*   **OGL**: Minimal WebGL library for immersive visual effects.
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally.
+
+### Prerequisites
+
+*   **Python 3.11** or higher
+*   **Node.js 18** or higher
+*   **Poetry** (Python dependency management)
+*   **npm** or **yarn**
+
+### Installation
+
+#### 1. Backend Setup
+
+Navigate to the backend directory and install dependencies:
+
 ```bash
 cd backend
 poetry install
-poetry run python main.py
 ```
 
-**Frontend:**
+Create a `.env` file in the `backend` directory and add your API keys:
+
+```env
+OPENAI_API_KEY=your_api_key_here
+```
+
+Start the development server:
+
+```bash
+poetry run python main.py
+```
+The backend API will be available at `http://localhost:8000`.
+
+#### 2. Frontend Setup
+
+Navigate to the frontend directory and install dependencies:
+
 ```bash
 cd frontend
 npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
+The application will be available at `http://localhost:3000`.
 
 ---
 
-## Kto za tým stojí?
+## 💡 Usage
 
-Sme partia kamošov, ktorí nechceli stráviť víkend spaním.
+1.  Open the application in your browser.
+2.  Enter your current job title and description.
+3.  Wait for the AI agents to decompose and analyze your role.
+4.  Review your **Automation Score** and explore the **Future Scenarios**.
+5.  Check the **Recommendations** tab for suggested upskilling paths.
 
-*   **[Meno]** - Frontend & Design
-*   **[Meno]** - Backend & AI Logic
-*   **[Meno]** - Data & Prompts
-*   **[Meno]** - Idea & Panic Management
+---
 
-Dúfame, že vám to pomôže tak, ako to pomohlo nám (upokojiť sa, že ešte pár rokov máme prácu). Peace. ✌️
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
