@@ -40,8 +40,9 @@ export default function RiskAssessment() {
 
             // Shorten task name
             const shortName = taskName.split("(")[0].trim();
-            const category = shortName.length > 45 ? shortName.substring(0, 45) + "..." : shortName;
+            const category = shortName.length > 100 ? shortName.substring(0, 100) + "..." : shortName;
 
+            
             if (automationScore > 70) {
                 color = "bg-red-500";
             } else if (automationScore > 40) {
@@ -95,12 +96,12 @@ export default function RiskAssessment() {
             <div className="relative">
                 <div className="flex items-center gap-3 mb-6">
                     <div className={`p-3 rounded-lg ${riskData.riskLevel === "high" ? "bg-red-500/10" :
-                            riskData.riskLevel === "medium" ? "bg-yellow-500/10" :
-                                "bg-green-500/10"
+                        riskData.riskLevel === "medium" ? "bg-yellow-500/10" :
+                            "bg-green-500/10"
                         }`}>
                         <AlertTriangle className={`w-6 h-6 ${riskData.riskLevel === "high" ? "text-red-400" :
-                                riskData.riskLevel === "medium" ? "text-yellow-400" :
-                                    "text-green-400"
+                            riskData.riskLevel === "medium" ? "text-yellow-400" :
+                                "text-green-400"
                             }`} />
                     </div>
                     <div>

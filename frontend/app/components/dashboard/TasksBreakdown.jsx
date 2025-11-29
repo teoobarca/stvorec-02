@@ -127,7 +127,7 @@ export default function TasksBreakdown() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className={`${task.bgColor} rounded-lg p-4 border border-white/10`}
+                        className={` rounded-lg p-4 border border-white/10`}
                     >
                         <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">

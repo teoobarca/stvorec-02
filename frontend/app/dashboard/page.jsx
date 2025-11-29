@@ -7,8 +7,7 @@ import RiskAssessment from "../components/dashboard/RiskAssessment";
 export default function DashboardPage() {
     return (
         <DashboardLayout
-            pageTitle="Dashboard"
-            pageDescription="Your personalized AI impact analysis"
+
         >
             <div className="space-y-6">
                 {/* Welcome Message */}

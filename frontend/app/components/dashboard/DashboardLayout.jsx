@@ -4,14 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
     LayoutDashboard,
-    BarChart3,
+    BookCheck,
     Lightbulb,
     Calendar,
     Shuffle,
     Menu,
     X,
     Home,
-    Store
+    Store,
+    Briefcase
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,15 +23,16 @@ export default function DashboardLayout({ children, pageTitle, pageDescription }
 
     const navItems = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-        { name: "Tasks", icon: BarChart3, href: "/dashboard/tasks" },
-        { name: "Skills", icon: Lightbulb, href: "/dashboard/skills" },
-        { name: "Roadmap", icon: Calendar, href: "/dashboard/roadmap" },
         { name: "Scenarios", icon: Shuffle, href: "/dashboard/scenarios" },
+        { name: "Tasks", icon: BookCheck, href: "/dashboard/tasks" },
+        { name: "Skills", icon: Lightbulb, href: "/dashboard/skills" },
+        { name: "Jobs", icon: Briefcase, href: "/dashboard/jobs" },
         { name: "Market Analytics", icon: Store, href: "/dashboard/market" },
+        { name: "Roadmap", icon: Calendar, href: "/dashboard/roadmap" },
     ];
 
     return (
-        <div className="min-h-screen bg-black text-white">
+        <div className="min-h-screen bg-blsack text-white">
 
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
@@ -89,27 +91,7 @@ export default function DashboardLayout({ children, pageTitle, pageDescription }
             {/* Main Content */}
             <div className="lg:ml-64">
                 {/* Header */}
-                <header className="sticky top-0 z-30 bg-black/50 backdrop-blur-xl border-b border-white/10">
-                    <div className="flex items-center justify-between px-6 py-4">
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => setSidebarOpen(true)}
-                                className="lg:hidden text-zinc-400 hover:text-white"
-                            >
-                                <Menu className="w-6 h-6" />
-                            </button>
-                            <div>
-                                <h1 className="text-2xl font-bold text-white">{pageTitle}</h1>
-                                {pageDescription && (
-                                    <p className="text-sm text-zinc-400">{pageDescription}</p>
-                                )}
-                            </div>
-                        </div>
 
-                        {/* Quick Stats */}
-
-                    </div>
-                </header>
 
                 {/* Page Content */}
                 <main className="p-6 relative">

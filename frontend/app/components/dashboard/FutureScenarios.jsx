@@ -1,9 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Calendar, TrendingUp, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { Calendar, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useProfessionData from "../../hooks/useProfessionData";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+// Helper function to clean markdown content by removing citation markers
+const cleanMarkdown = (text) => {
+    if (!text) return "";
+    // Remove citation markers like citeturn0news12, citeturn0search15, citeturn0news12turn0news14, etc.
+    // This regex matches "cite" followed by any combination of letters and numbers
+    return text.replace(/cite(?:[a-z0-9]+)+/gi, '').trim();
+};
 
 export default function FutureScenarios() {
     const { data: professionData, loading, error } = useProfessionData();
@@ -16,7 +26,6 @@ export default function FutureScenarios() {
         const formattedScenarios = professionData.future_scenarios.map((scenario, index) => {
             let likelihoodColor = "text-green-400";
             let likelihoodBg = "bg-green-500/10";
-            let year = 2025 + index * 2;
 
             if (scenario.likelihood === "high") {
                 likelihoodColor = "text-green-400";
@@ -31,7 +40,6 @@ export default function FutureScenarios() {
 
             return {
                 ...scenario,
-                year,
                 likelihoodColor,
                 likelihoodBg,
             };
@@ -77,13 +85,9 @@ export default function FutureScenarios() {
                             <div className={`w-12 h-12 rounded-full ${scenario.likelihoodBg} flex items-center justify-center mb-2`}>
                                 <Calendar className={`w-6 h-6 ${scenario.likelihoodColor}`} />
                             </div>
-                            <div className="text-xs font-semibold text-white">{scenario.year}</div>
                             <div className={`text-xs ${scenario.likelihoodColor} capitalize`}>
                                 {scenario.likelihood}
                             </div>
-                            {index < scenarios.length - 1 && (
-                                <div className="w-full h-0.5 bg-white/10 mt-2"></div>
-                            )}
                         </div>
                     ))}
                 </div>
@@ -109,7 +113,6 @@ export default function FutureScenarios() {
                                         <div className={`px-3 py-1 rounded-full text-xs font-semibold ${scenario.likelihoodBg} ${scenario.likelihoodColor} border border-current`}>
                                             {scenario.likelihood.toUpperCase()}
                                         </div>
-                                        <div className="text-xs text-zinc-500">~{scenario.year}</div>
                                     </div>
                                     <h3 className="text-lg font-semibold text-white mb-1">
                                         {scenario.title}
@@ -139,13 +142,22 @@ export default function FutureScenarios() {
                                 >
                                     <div className="p-4 bg-white/5">
                                         <div className="prose prose-invert prose-sm max-w-none">
-                                            {scenario.description.split('\n').map((paragraph, pIndex) => (
-                                                paragraph.trim() && (
-                                                    <p key={pIndex} className="text-sm text-zinc-300 mb-3 leading-relaxed">
-                                                        {paragraph}
-                                                    </p>
-                                                )
-                                            ))}
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    p: ({ node, ...props }) => <p className="text-sm text-zinc-300 mb-3 leading-relaxed" {...props} />,
+                                                    strong: ({ node, ...props }) => <strong className="text-white font-semibold" {...props} />,
+                                                    em: ({ node, ...props }) => <em className="text-zinc-200 italic" {...props} />,
+                                                    ul: ({ node, ...props }) => <ul className="list-disc ml-5 mb-3 space-y-1 text-zinc-300" {...props} />,
+                                                    ol: ({ node, ...props }) => <ol className="list-decimal ml-5 mb-3 space-y-1 text-zinc-300" {...props} />,
+                                                    li: ({ node, ...props }) => <li className="text-sm text-zinc-300 leading-relaxed" {...props} />,
+                                                    h1: ({ node, ...props }) => <h1 className="text-xl font-bold text-white mb-3 mt-4" {...props} />,
+                                                    h2: ({ node, ...props }) => <h2 className="text-lg font-bold text-white mb-2 mt-3" {...props} />,
+                                                    h3: ({ node, ...props }) => <h3 className="text-base font-semibold text-white mb-2 mt-2" {...props} />,
+                                                }}
+                                            >
+                                                {cleanMarkdown(scenario.description)}
+                                            </ReactMarkdown>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -158,7 +170,7 @@ export default function FutureScenarios() {
             {/* Summary */}
             <div className="mt-6 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                    <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <TrendingUp className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <div>
                         <h4 className="text-sm font-semibold text-white mb-1">Key Takeaway</h4>
                         <p className="text-sm text-zinc-300">
