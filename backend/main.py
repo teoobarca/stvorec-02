@@ -14,7 +14,8 @@ from prompts import (
     TASKS_REPLACABILITY_SYSTEM_PROMPT,
     SKILLS_DECOMPOSITION_SYSTEM_PROMPT,
     SKILLS_REPLACABILITY_SYSTEM_PROMPT,
-    SCENARIO_GENERATION_SYSTEM_PROMPT
+    SCENARIO_GENERATION_SYSTEM_PROMPT,
+    CAREER_RECOMMENDATIONS_SYSTEM_PROMPT
 )
 
 load_dotenv()
@@ -79,6 +80,16 @@ class FutureScenario(BaseModel):
 
 class FutureScenarios(BaseModel):
     scenarios: List[FutureScenario] = Field(description="List of 1 to 3 different future scenarios", min_length=1, max_length=3)
+
+class CareerOption(BaseModel):
+    job_title: str = Field(description="Title of the recommended alternative career")
+    reason: str = Field(description="Explanation of why this is a good fit")
+    transferable_skills: List[str] = Field(description="List of skills the user already possesses that are relevant")
+    new_skills_needed: List[str] = Field(description="List of new skills the user needs to acquire")
+    ease_of_transition: Literal["Low", "Medium", "High"] = Field(description="Estimated difficulty of transitioning to this role")
+
+class CareerRecommendations(BaseModel):
+    recommendations: List[CareerOption] = Field(description="List of 3 to 5 recommended career options", min_length=3, max_length=5)
 
 
 llm = ChatOpenAI(
@@ -224,31 +235,47 @@ Education: {profile.education}"""
     
     weighted_final_score = (total_task_automation * 0.4) + (total_skill_automation * 0.6)
     
-    # 4. Generate Future Scenarios
+    # 4. Generate Future Scenarios & Career Recommendations (Concurrent)
     
-    # Prepare detailed data for scenario generation
+    # Prepare detailed data for generation
     analysis_summary = {
         "job_context": job_context,
         "tasks_analysis": task_automation_breakdown,
         "skills_analysis": skill_automation_breakdown,
         "total_automation_score": weighted_final_score
     }
+    analysis_summary_json = json.dumps(analysis_summary, indent=2)
     
-    # Use create_agent to allow tool usage (web_search_preview)
+    # Scenario Agent
     agent_scenarios = create_agent(
         llm,
         response_format=ProviderStrategy(FutureScenarios),
         tools=[{"type": "web_search_preview"}]
     )
     
-    scenario_messages = [
-        ("system", SCENARIO_GENERATION_SYSTEM_PROMPT),
-        ("human", f"Full Job Analysis Data:\n{json.dumps(analysis_summary, indent=2)}")
-    ]
+    # Career Recommendation Agent
+    agent_careers = create_agent(
+        llm,
+        response_format=ProviderStrategy(CareerRecommendations),
+        tools=[{"type": "web_search_preview"}]
+    )
     
-    scenarios_result = await agent_scenarios.ainvoke({
-        "messages": scenario_messages
+    # Launch both concurrently
+    scenarios_future = agent_scenarios.ainvoke({
+        "messages": [
+            ("system", SCENARIO_GENERATION_SYSTEM_PROMPT),
+            ("human", f"Full Job Analysis Data:\n{analysis_summary_json}")
+        ]
     })
+    
+    careers_future = agent_careers.ainvoke({
+        "messages": [
+            ("system", CAREER_RECOMMENDATIONS_SYSTEM_PROMPT),
+            ("human", f"Full Job Analysis Data:\n{analysis_summary_json}")
+        ]
+    })
+    
+    result_scenarios, result_careers = await asyncio.gather(scenarios_future, careers_future)
     
     return {
         "task_automation_breakdown": task_automation_breakdown,
@@ -256,7 +283,8 @@ Education: {profile.education}"""
         "skill_automation_breakdown": skill_automation_breakdown,
         "total_skill_automation": total_skill_automation,
         "weighted_final_score": weighted_final_score,
-        "future_scenarios": scenarios_result["structured_response"].scenarios
+        "future_scenarios": result_scenarios["structured_response"].scenarios,
+        "career_recommendations": result_careers["structured_response"].recommendations
     }
 
 if __name__ == "__main__":
