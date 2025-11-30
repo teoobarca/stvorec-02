@@ -1,8 +1,6 @@
-# willaireplace.you
-
 <div align="center">
   <a href="https://willaireplace.you/">
-    <img src="assets/banner.png" alt="willaireplace.you Banner" style="border-radius: 15px; width: 100%;" />
+    <img src="assets/banner.png" alt="willaireplace.you Banner" style="border-radius: 15px; width: 70%;" />
   </a>
 </div>
 
