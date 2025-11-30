@@ -134,6 +134,12 @@ export default function HeroSection() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json();
+        if (response.status === 400 && errorData.detail?.message) {
+          setError(errorData.detail.message);
+          setIsAnalyzing(false);
+          return;
+        }
         throw new Error(`Analysis failed: ${response.status}`);
       }
 
@@ -308,8 +314,15 @@ export default function HeroSection() {
                     Thinking
                     <span className="inline-block w-4 text-left">{dots}</span>
                   </h3>
-                  <div className="h-40 overflow-hidden relative flex justify-center items-center mask-image-gradient">
-                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10 pointer-events-none opacity-0" />
+                  <div
+                    className="h-40 md:h-64 overflow-hidden relative flex justify-center items-center"
+                    style={{
+                      maskImage:
+                        "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+                      WebkitMaskImage:
+                        "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+                    }}
+                  >
                     <AnimatePresence mode="wait">
                       <motion.p
                         key={currentCommentIndex}
