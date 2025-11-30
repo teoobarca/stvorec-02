@@ -250,6 +250,12 @@ export default function HeroSection() {
                         type="text"
                         value={profession}
                         onChange={(e) => setProfession(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && profession.trim()) {
+                            setFormData({ ...formData, jobTitle: profession });
+                            setShowForm(true);
+                          }
+                        }}
                         placeholder="Enter a profession (e.g. UX Designer)"
                         className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-2.5 outline-none custom-placeholder"
                       />
