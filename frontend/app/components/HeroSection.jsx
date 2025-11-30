@@ -243,15 +243,15 @@ export default function HeroSection() {
                 {/* Search Component */}
                 <div className="max-w-2xl mx-auto mb-12">
                   <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-2xl blur-xl opacity-30 group-hover:opacity-60 transition duration-1000"></div>
-                    <div className="relative flex items-center bg-white/5 backdrop-blur-2xl border border-white/20 rounded-2xl p-2 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+                    <div className="relative flex items-center bg-white/5 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
                       <Search className="w-6 h-6 text-zinc-400 ml-4" />
                       <input
                         type="text"
                         value={profession}
                         onChange={(e) => setProfession(e.target.value)}
                         placeholder="Enter a profession (e.g. UX Designer)"
-                        className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-3 outline-none custom-placeholder"
+                        className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-2.5 outline-none custom-placeholder"
                       />
                       <button
                         onClick={() => {
@@ -260,12 +260,9 @@ export default function HeroSection() {
                             setShowForm(true);
                           }
                         }}
-                        className="group/btn bg-gradient-to-br hover:cursor-pointer from-white to-zinc-100 text-black px-6 px-5 pl-2 py-3 rounded-xl font-medium hover:shadow-[0_10px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-300 flex items-center gap-2 whitespace-nowrap shadow-[0_4px_14px_rgba(0,0,0,0.15)] relative overflow-hidden"
+                        className="group/btn bg-white text-black w-9 h-9 rounded-full hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center flex-shrink-0 aspect-square mr-1 hover:cursor-pointer"
                       >
-                        <span className="relative z-10 flex  justify-center items-center gap-1 sm:mr-0 mr-3  ">
-                          Analyze{" "}
-                          <ArrowRight className="w-4 h-4 relative text-black z-10 group-hover/btn:translate-x-1 transition-transform" />
-                        </span>
+                        <ArrowRight className="w-5 h-5 text-black" />
                       </button>
                     </div>
                   </div>
