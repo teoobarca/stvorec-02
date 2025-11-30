@@ -229,7 +229,6 @@ export default function HeroSection() {
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
               <div className="max-w-4xl mx-auto text-center">
-
                 <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
                   Will AI Replace{" "}
                   <span className="relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
