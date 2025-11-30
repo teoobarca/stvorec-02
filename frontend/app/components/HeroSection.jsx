@@ -1,51 +1,51 @@
-  "use client";
+"use client";
 
-  import {
-    Search,
-    ArrowRight,
-    Sparkles,
-    Code,
-    GraduationCap,
-    Palette,
-    Scale,
-    Car,
-    Stethoscope,
-    TrendingUp,
-    Loader2,
-    Brain
-  } from "lucide-react";
-  import { useEffect, useState } from "react";
-  import { motion, AnimatePresence } from "framer-motion";
-  import { useRouter } from "next/navigation";
-  import LightRays from "./LightRays";
+import {
+  Search,
+  ArrowRight,
+  Sparkles,
+  Code,
+  GraduationCap,
+  Palette,
+  Scale,
+  Car,
+  Stethoscope,
+  TrendingUp,
+  Loader2,
+  Brain,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import LightRays from "./LightRays";
 
-  export default function HeroSection() {
-    const router = useRouter();
-    const [profession, setProfession] = useState("");
-    const [showForm, setShowForm] = useState(false);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [error, setError] = useState(null);
-    const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
-    const [formData, setFormData] = useState({
-      age: "",
-      gender: "",
-      jobTitle: "",
-      jobDescription: "",
-      dailyRoutine: "",
-      location: "",
-      education: "",
-    });
-    const [currentJobIndex, setCurrentJobIndex] = useState(0);
-    const [displayedText, setDisplayedText] = useState("");
-    const [isDeleting, setIsDeleting] = useState(false);
+export default function HeroSection() {
+  const router = useRouter();
+  const [profession, setProfession] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
+  const [formData, setFormData] = useState({
+    age: "",
+    gender: "",
+    jobTitle: "",
+    jobDescription: "",
+    dailyRoutine: "",
+    location: "",
+    education: "",
+  });
+  const [currentJobIndex, setCurrentJobIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-    const jobsToRotate = [
-      "Teachers?",
-      "Lawyers?",
-      "Drivers?",
-      "Doctors?",
-      "Marketers?",
-    ];
+  const jobsToRotate = [
+    "Teachers?",
+    "Lawyers?",
+    "Drivers?",
+    "Doctors?",
+    "Marketers?",
+  ];
 
   useEffect(() => {
     // Ak používateľ píše do inputu, nezobrazuj rotáciu
@@ -111,31 +111,157 @@
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
-    const handleAnalyze = async () => {
-      try {
-        setIsAnalyzing(true);
-        setError(null);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleAnalyze = async () => {
+    try {
+      setIsAnalyzing(true);
+      setError(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
-  const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      age: formData.age,
-      gender: formData.gender,
-      job_title: formData.jobTitle,
-      job_description: formData.jobDescription,
-      daily_routine: formData.dailyRoutine,
-      location: formData.location,
-      education: formData.education,
-    }),
-  });
+      const response = await fetch("http://localhost:8000/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          age: formData.age,
+          gender: formData.gender,
+          job_title: formData.jobTitle,
+          job_description: formData.jobDescription,
+          daily_routine: formData.dailyRoutine,
+          location: formData.location,
+          education: formData.education,
+        }),
+      });
 
-        if (!response.ok) {
-          throw new Error(`Analysis failed: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`Analysis failed: ${response.status}`);
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, currentJobIndex, profession]);
+
+  const thinkingComments = [
+    "Asking the AI overlords for permission...",
+    "Checking if robots can do your paperwork...",
+    "Calculating your coffee budget...",
+    "Consulting the digital crystal ball...",
+    "Teaching the algorithm to be nice...",
+    "Scanning for Terminators...",
+    "Measuring your human charm...",
+    "Reading your career horoscope...",
+    "Convincing the computer you're busy...",
+    "Almost done, just one more byte...",
+  ];
+
+  return (
+    <section className="relative overflow-hidden pt-20 pb-32 md:pt-32 md:pb-48 min-h-screen flex items-center">
+      <div className="absolute inset-0 z-0">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#49218f"
+          raysSpeed={1.8}
+          lightSpread={1.2}
+          rayLength={10}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+        />
+      </div>
+      {/* Background Gradients */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl mix-blend-screen"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.6, 0.3],
+            x: [0, 20, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="absolute top-40 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl mix-blend-screen"
+        />
+      </div>
+      <div className="container mx-auto px-4 relative z-10 w-full">
+        <AnimatePresence mode="wait">
+          {!showForm ? (
+            /* Hero Content */
+            <motion.div
+              key="hero"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <div className="max-w-4xl mx-auto text-center">
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                  Will AI Replace{" "}
+                  <span className="relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
+                    {profession.trim().length > 0
+                      ? profession + "?"
+                      : displayedText}
+                    <span className="animate-pulse relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
+                      |
+                    </span>
+                  </span>
+                </h1>
+
+                <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+                  Discover your career's future in the age of artificial
+                  intelligence. We analyze risks and reveal the skills you need
+                  to become irreplaceable.
+                </p>
+
+                {/* Search Component */}
+                <div className="max-w-2xl mx-auto mb-12">
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+                    <div className="relative flex items-center bg-white/5 backdrop-blur-2xl border border-white/20 rounded-full p-1.5 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
+                      <Search className="w-6 h-6 text-zinc-400 ml-4" />
+                      <input
+                        type="text"
+                        value={profession}
+                        onChange={(e) => setProfession(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && profession.trim()) {
+                            setFormData({ ...formData, jobTitle: profession });
+                            setShowForm(true);
+                          }
+                        }}
+                        placeholder="Enter a profession (e.g. UX Designer)"
+                        className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-2.5 outline-none custom-placeholder"
+                      />
+                      <button
+                        onClick={() => {
+                          if (profession.trim()) {
+                            setFormData({ ...formData, jobTitle: profession });
+                            setShowForm(true);
+                          }
+                        }}
+                        className="group/btn bg-white text-black w-9 h-9 rounded-full hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center flex-shrink-0 aspect-square mr-1 hover:cursor-pointer"
+                      >
+                        <ArrowRight className="w-5 h-5 text-black" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
         const result = await response.json();
         console.log(result);
@@ -344,57 +470,21 @@
                   <div className="relative">
                     <div className="relative bg-white/5 backdrop-blur-2xl border border-white/20 rounded-2xl p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
                       <div>
-                        <button
-                          onClick={() => setShowForm(false)}
-                          className="mb-6 text-zinc-400 hover:cursor-pointer hover:text-white transition-colors flex items-center gap-2"
-                        >
-                          <ArrowRight className="w-4 h-4 rotate-180 hover:cursor-pointer" />{" "}
-                          Go back
-                        </button>
-
-                        <h2 className="text-2xl font-bold text-white mb-5">
-                          Tell us more about your profession
-                        </h2>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        {/* Age */}
-                        <div>
-                          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                            Age
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.age}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                age: e.target.value,
-                              })
-                            }
-                            placeholder="e.g., 25"
-                            className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
-                          />
-                        </div>
-
-                        {/* Gender */}
-                        <div>
-                          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                            Gender
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.gender}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                gender: e.target.value,
-                              })
-                            }
-                            placeholder="e.g., Male, Female"
-                            className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
-                          />
-                        </div>
+                        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                          Gender
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.gender}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              gender: e.target.value,
+                            })
+                          }
+                          placeholder="e.g., Man, Woman, Non-binary"
+                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                        />
                       </div>
 
                       {/* Job Title */}
@@ -475,24 +565,23 @@
                           />
                         </div>
 
-                        {/* Education */}
-                        <div className="mb-3">
-                          <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                            Education
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.education}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                education: e.target.value,
-                              })
-                            }
-                            placeholder="e.g., Computer Science"
-                            className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
-                          />
-                        </div>
+                      {/* Education */}
+                      <div>
+                        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                          Education and Hobbies
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.education}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              education: e.target.value,
+                            })
+                          }
+                          placeholder="e.g., Comenius University, Computer Science"
+                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                        />
                       </div>
 
                       {/* Error Message */}

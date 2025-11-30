@@ -81,9 +81,9 @@ export default function Footer() {
             className="space-y-4"
           >
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-6 h-6 text-blue-400" />
+              {/* <Sparkles className="w-6 h-6 text-blue-400" /> */}
               <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-                Unreplaceable.ai
+                willaireplace.you
               </div>
             </div>
             <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
@@ -172,7 +172,7 @@ export default function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
             <p>
-              &copy; {new Date().getFullYear()} Unreplaceable.ai. Built with{" "}
+              &copy; {new Date().getFullYear()} willaireplace.you. Built with{" "}
               <span className="text-purple-400">AIove</span> for the future.
             </p>
             <div className="flex gap-6 text-xs">
