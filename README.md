@@ -1,8 +1,8 @@
-# Unreplaceable.ai
+# willaireplace.you
 
 <div align="center">
   <a href="https://willaireplace.you/">
-    <img src="assets/banner.png" alt="Unreplaceable.ai Banner" style="border-radius: 15px; width: 100%;" />
+    <img src="assets/banner.png" alt="willaireplace.you Banner" style="border-radius: 15px; width: 100%;" />
   </a>
 </div>
 
@@ -21,7 +21,7 @@
 
 ## 📖 About The Project
 
-**Unreplaceable.ai** (formerly stvorec-02) is your career compass for the future of work. In an age where job markets shift in months and skills become obsolete overnight, we provide clarity and strategy.
+**willaireplace.you** is your career compass for the future of work. In an age where job markets shift in months and skills become obsolete overnight, we provide clarity and strategy.
 
 By leveraging state-of-the-art Large Language Models (LLMs) and complex agentic workflows, we decompose job roles into their fundamental atomic units—tasks and skills—to provide a granular automation risk assessment.
 

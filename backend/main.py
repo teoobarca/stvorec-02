@@ -3,20 +3,16 @@ import json
 import re
 import tempfile
 import os
-import subprocess
-import traceback
 from contextlib import asynccontextmanager
-from typing import List, Dict, Any, Union, Literal, Optional
+from typing import List, Union, Literal
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ProviderStrategy
-from langchain_core.tools import tool
-from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage, AIMessage, BaseMessage
-from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage
 from dotenv import load_dotenv
 from prompts import (
     TASKS_DECOMPOSITION_SYSTEM_PROMPT, 
