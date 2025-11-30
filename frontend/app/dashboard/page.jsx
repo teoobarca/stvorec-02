@@ -13,7 +13,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-4"
+          className="grid md:grid-cols-3 gap-4"
         >
           <a
             href="/dashboard/scenarios"
@@ -90,31 +90,6 @@ export default function DashboardPage() {
               Required skills for your role
             </p>
           </a>
-
-          <a
-            href="/dashboard/roadmap"
-            className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all cursor-pointer"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-all">
-                <svg
-                  className="w-5 h-5 text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white">Learning Roadmap</h3>
-            </div>
-            <p className="text-sm text-zinc-400">Personalized learning plan</p>
-          </a>
         </motion.div>
 
         {/* Risk Assessment */}
@@ -123,4 +98,3 @@ export default function DashboardPage() {
     </DashboardLayout>
   );
 }
-
