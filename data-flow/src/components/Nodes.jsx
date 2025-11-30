@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, Calculator, FileText, Activity, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, Calculator, FileText, Activity, CheckCircle, AlertCircle, Tv, Zap } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import formImage from '../assets/form_screenshot.png';
 
 // Utility for class merging
 function cn(...inputs) {
@@ -31,20 +32,48 @@ const NodeContainer = ({ children, className, delay = 0 }) => (
 );
 
 export const InputNode = ({ data }) => (
-    <NodeContainer className="w-[500px] border-neon-cyan/30">
-        <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-full bg-neon-cyan/10 text-neon-cyan">
-                <User size={40} />
-            </div>
-            <h3 className="font-mono text-2xl font-bold text-neon-cyan">USER PROFILE</h3>
+    <motion.div 
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, type: "spring" }}
+        className="w-[700px] overflow-hidden rounded-2xl shadow-2xl"
+    >
+        <img src={formImage} alt="User Profile Form" className="w-full h-auto border border-white/20 rounded-2xl" />
+    </motion.div>
+);
+
+export const CompetitionNode = () => (
+    <motion.div 
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
+        className="w-[900px] flex flex-col items-center text-center"
+    >
+        <div className="mb-12">
+             <h2 className="text-2xl font-medium text-blue-300 tracking-[0.2em] uppercase mb-6">
+                Challenge: Task 2
+            </h2>
+            <h1 className="text-7xl font-bold text-white tracking-tighter mb-8 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                Work & <span className="text-blue-400">Skills Revolution</span>
+            </h1>
         </div>
-        <div className="space-y-2 text-lg text-gray-400 font-mono">
-            <p><span className="text-gray-500">ROLE:</span> {data.jobTitle}</p>
-            <p><span className="text-gray-500">AGE:</span> {data.age}</p>
-            <p><span className="text-gray-500">LOC:</span> {data.location}</p>
-            <p className="truncate"><span className="text-gray-500">EDU:</span> {data.education}</p>
+
+        <div className="max-w-4xl relative">
+            {/* Decorative quotes */}
+            <span className="absolute -top-8 -left-12 text-8xl text-blue-500/20 font-serif">"</span>
+            
+            <p className="text-4xl font-light leading-snug text-blue-100">
+                Build Something That Solves a <br/>
+                <span className="text-white font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-200">
+                    Future Problem
+                </span> 
+                <span className="text-blue-300 mx-3">–</span> 
+                Today.
+            </p>
+            
+             <span className="absolute -bottom-12 -right-12 text-8xl text-blue-500/20 font-serif rotate-180">"</span>
         </div>
-    </NodeContainer>
+    </motion.div>
 );
 
 export const DecompositionNode = ({ title, items, type = "tasks" }) => (
