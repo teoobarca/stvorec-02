@@ -8,7 +8,7 @@
 
 <div align="center">
 
-  > **The future demands preparation, not panic.**
+  **The future demands preparation, not panic.**
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -19,7 +19,7 @@
 
 ## 📖 About The Project
 
-**willaireplace.you** is your career compass for the future of work. In an age where job markets shift in months and skills become obsolete overnight, we provide clarity and strategy.
+[**willaireplace.you**](https://willaireplace.you) is your career compass for the future of work. In an age where job markets shift in months and skills become obsolete overnight, we provide clarity and strategy.
 
 By leveraging state-of-the-art Large Language Models (LLMs) and complex agentic workflows, we decompose job roles into their fundamental atomic units—tasks and skills—to provide a granular automation risk assessment.
 

@@ -1,9 +1,7 @@
 import asyncio
 import json
 import re
-import tempfile
-import os
-from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 from typing import List, Union, Literal
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +11,6 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ProviderStrategy
 from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage
-from dotenv import load_dotenv
 from prompts import (
     TASKS_DECOMPOSITION_SYSTEM_PROMPT, 
     TASKS_REPLACABILITY_SYSTEM_PROMPT,
@@ -23,6 +20,8 @@ from prompts import (
     CAREER_RECOMMENDATIONS_SYSTEM_PROMPT,
     ROADMAP_GENERATION_PROMPT
 )
+
+load_dotenv()
 
 # --- Helper Functions for Content Blocks ---
 def get_text_content(message: BaseMessage) -> str:
@@ -50,51 +49,30 @@ async def validate_mermaid_code_local(code: str) -> tuple[bool, str]:
     if "```" in code:
         return False, "Code contains markdown fences (```). Please output ONLY the raw code."
 
-    # Create a temporary file for the mermaid code
-    with tempfile.NamedTemporaryFile(mode='w+', suffix='.mmd', delete=False) as tmp_mmd:
-        tmp_mmd.write(code)
-        tmp_mmd_path = tmp_mmd.name
-
-    # Create a temporary path for the output (we don't actually need it, just for mmdc to run)
-    tmp_svg_path = tmp_mmd_path.replace('.mmd', '.svg')
-
     try:
-        # Run mmdc
-        # mmdc -i input.mmd -o output.svg
+        # Run mmdc with stdin input and stdout output to avoid temporary files
         process = await asyncio.create_subprocess_exec(
-            "mmdc", "-i", tmp_mmd_path, "-o", tmp_svg_path,
+            "mmdc", "-i", "-", "-o", "-",
+            stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
         
-        stdout, stderr = await process.communicate()
+        # Pass code via stdin
+        stdout, stderr = await process.communicate(input=code.encode())
         
         if process.returncode == 0:
             return True, ""
         else:
             error_msg = stderr.decode().strip()
-            # Clean up the error message slightly if it's too verbose
             return False, f"Mermaid Compiler Error:\n{error_msg}"
 
     except FileNotFoundError:
         return False, "Mermaid CLI (mmdc) not found. Please ensure it is installed globally via 'npm install -g @mermaid-js/mermaid-cli'."
     except Exception as e:
         return False, f"Unexpected error running validation: {str(e)}"
-    finally:
-        # Cleanup
-        if os.path.exists(tmp_mmd_path):
-            os.unlink(tmp_mmd_path)
-        if os.path.exists(tmp_svg_path):
-            os.unlink(tmp_svg_path)
 
-load_dotenv()
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # We don't need the MCP client anymore for this workflow
-    yield
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
