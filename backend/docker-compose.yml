@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PUPPETEER_CONFIG_FILE=/puppeteer-config.json
+    # Need this for puppeteer in docker occasionally
+    cap_add:
+      - SYS_ADMIN

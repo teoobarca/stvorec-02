@@ -1,13 +1,22 @@
 import asyncio
 import json
-from typing import List, Dict, Any, Union, Literal
+import re
+import tempfile
+import os
+import subprocess
+import traceback
+from contextlib import asynccontextmanager
+from typing import List, Dict, Any, Union, Literal, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import uvicorn
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ProviderStrategy
+from langchain_core.tools import tool
+from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage, AIMessage
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from dotenv import load_dotenv
 from prompts import (
     TASKS_DECOMPOSITION_SYSTEM_PROMPT, 
@@ -15,12 +24,72 @@ from prompts import (
     SKILLS_DECOMPOSITION_SYSTEM_PROMPT,
     SKILLS_REPLACABILITY_SYSTEM_PROMPT,
     SCENARIO_GENERATION_SYSTEM_PROMPT,
-    CAREER_RECOMMENDATIONS_SYSTEM_PROMPT
+    CAREER_RECOMMENDATIONS_SYSTEM_PROMPT,
+    ROADMAP_GENERATION_PROMPT
 )
+
+# --- Local Validation Function using Mermaid CLI ---
+async def validate_mermaid_code_local(code: str) -> tuple[bool, str]:
+    """
+    Validates Mermaid code using the locally installed Mermaid CLI (mmdc).
+    Returns (is_valid, error_message).
+    """
+    code = code.strip()
+    if not code:
+        return False, "Code is empty."
+    
+    # Basic Structure Check
+    if not code.startswith("flowchart TD"):
+        return False, "Diagram must start strictly with 'flowchart TD'."
+        
+    if "```" in code:
+        return False, "Code contains markdown fences (```). Please output ONLY the raw code."
+
+    # Create a temporary file for the mermaid code
+    with tempfile.NamedTemporaryFile(mode='w+', suffix='.mmd', delete=False) as tmp_mmd:
+        tmp_mmd.write(code)
+        tmp_mmd_path = tmp_mmd.name
+
+    # Create a temporary path for the output (we don't actually need it, just for mmdc to run)
+    tmp_svg_path = tmp_mmd_path.replace('.mmd', '.svg')
+
+    try:
+        # Run mmdc
+        # mmdc -i input.mmd -o output.svg
+        process = await asyncio.create_subprocess_exec(
+            "mmdc", "-i", tmp_mmd_path, "-o", tmp_svg_path,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        
+        stdout, stderr = await process.communicate()
+        
+        if process.returncode == 0:
+            return True, ""
+        else:
+            error_msg = stderr.decode().strip()
+            # Clean up the error message slightly if it's too verbose
+            return False, f"Mermaid Compiler Error:\n{error_msg}"
+
+    except FileNotFoundError:
+        return False, "Mermaid CLI (mmdc) not found. Please ensure it is installed globally via 'npm install -g @mermaid-js/mermaid-cli'."
+    except Exception as e:
+        return False, f"Unexpected error running validation: {str(e)}"
+    finally:
+        # Cleanup
+        if os.path.exists(tmp_mmd_path):
+            os.unlink(tmp_mmd_path)
+        if os.path.exists(tmp_svg_path):
+            os.unlink(tmp_svg_path)
 
 load_dotenv()
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # We don't need the MCP client anymore for this workflow
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -81,21 +150,95 @@ class FutureScenario(BaseModel):
 class FutureScenarios(BaseModel):
     scenarios: List[FutureScenario] = Field(description="List of 1 to 3 different future scenarios", min_length=1, max_length=3)
 
-class CareerOption(BaseModel):
+# --- New Models for Two-Step Process ---
+class CareerOptionInitial(BaseModel):
     job_title: str = Field(description="Title of the recommended alternative career")
     reason: str = Field(description="Explanation of why this is a good fit")
     transferable_skills: List[str] = Field(description="List of skills the user already possesses that are relevant")
     new_skills_needed: List[str] = Field(description="List of new skills the user needs to acquire")
     ease_of_transition: Literal["Low", "Medium", "High"] = Field(description="Estimated difficulty of transitioning to this role")
 
+class CareerRecommendationsInitial(BaseModel):
+    recommendations: List[CareerOptionInitial] = Field(description="List of 3 to 5 recommended career options", min_length=3, max_length=5)
+
+class CareerOption(CareerOptionInitial):
+    roadmap: str = Field(description="Mermaid diagram code for a roadmap to approach this role")
+
 class CareerRecommendations(BaseModel):
     recommendations: List[CareerOption] = Field(description="List of 3 to 5 recommended career options", min_length=3, max_length=5)
-
+# ---------------------------------------
 
 llm = ChatOpenAI(
     model="gpt-5.1",
     # temperature=1
 )
+
+async def generate_roadmap_with_local_loop(job_title: str, job_context: str) -> str:
+    """
+    Generates a Mermaid roadmap using a local validation loop (inspired by the Typst compiler workflow).
+    """
+    
+    MAX_ATTEMPTS = 3
+    
+    # Initial conversation
+    messages = [
+        SystemMessage(content=ROADMAP_GENERATION_PROMPT),
+        HumanMessage(content=f"Create a career roadmap for: {job_title}\nContext: {job_context}")
+    ]
+    
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        print(f"🔄 Attempt {attempt}/{MAX_ATTEMPTS} for {job_title}")
+        
+        # Invoke LLM
+        response = await llm.ainvoke(messages, config={"run_name": f"RoadmapGen_Attempt_{attempt}"})
+        content = response.content.strip()
+        
+        # --- CLEANUP: Handle JSON-wrapped output or fences ---
+        mermaid_code = content
+        
+        # 1. Check if it's a JSON string (common artifact when models get confused about tools/formats)
+        if content.startswith("{") and "mermaid_text" in content:
+            try:
+                data = json.loads(content)
+                if "mermaid_text" in data:
+                    mermaid_code = data["mermaid_text"]
+            except json.JSONDecodeError:
+                pass # Not valid JSON, proceed with raw content
+        
+        # 2. Check for markdown fences
+        if "```" in mermaid_code:
+            pattern = r"```(?:mermaid)?\n?(.*?)```"
+            match = re.search(pattern, mermaid_code, re.DOTALL)
+            if match:
+                mermaid_code = match.group(1).strip()
+        
+        # Ensure we strip whitespace again
+        mermaid_code = mermaid_code.strip()
+        
+        # Add the raw response to history so the LLM knows what it generated
+        messages.append(AIMessage(content=content)) 
+        
+        # Validate Locally using mmdc
+        is_valid, error_msg = await validate_mermaid_code_local(mermaid_code)
+        
+        if is_valid:
+            print(f"✅ Valid diagram generated for {job_title}")
+            return mermaid_code
+        else:
+            print(f"❌ Failed attempt {attempt} for {job_title}: {error_msg}")
+            # Feedback for next turn
+            feedback_msg = (
+                f"The Mermaid compiler raised an error on attempt {attempt}:\n\n"
+                f"{error_msg}\n\n"
+                "Please return the ENTIRE corrected Mermaid diagram code again. "
+                "Ensure STRICT adherence to the syntax.\n"
+                "DO NOT wrap the output in JSON. DO NOT wrap the output in markdown fences (```). Just return the raw code starting with 'flowchart TD'."
+            )
+            messages.append(HumanMessage(content=feedback_msg))
+    
+    print(f"⚠️ All attempts failed for {job_title}")
+    return "flowchart TD\nA[Error] --> B[Could not generate valid diagram]"
+
 
 async def evaluate_automation_potential(
     item: Union[Task, Skill], 
@@ -143,7 +286,7 @@ async def evaluate_automation_potential(
             ("human", user_prompt)
         ]
         
-        analysis = await structured_llm.ainvoke(messages)
+        analysis = await structured_llm.ainvoke(messages, config={"run_name": f"{item_type.capitalize()}AutomationEvaluator"})
         return analysis.score
 
 
@@ -175,14 +318,14 @@ Education: {profile.education}"""
             ("system", TASKS_DECOMPOSITION_SYSTEM_PROMPT),
             ("human", f"User Profile:\n{job_context}")
         ]
-    })
+    }, config={"run_name": "TaskDecompositionAgent"})
     
     skill_future = agent_skills.ainvoke({
         "messages": [
             ("system", SKILLS_DECOMPOSITION_SYSTEM_PROMPT),
             ("human", f"User Profile:\n{job_context}")
         ]
-    })
+    }, config={"run_name": "SkillDecompositionAgent"})
     
     result_tasks, result_skills = await asyncio.gather(task_future, skill_future)
     
@@ -253,29 +396,46 @@ Education: {profile.education}"""
         tools=[{"type": "web_search_preview"}]
     )
     
-    # Career Recommendation Agent
-    agent_careers = create_agent(
+    # Career Recommendation Agent (Initial - No Roadmap)
+    agent_careers_initial = create_agent(
         llm,
-        response_format=ProviderStrategy(CareerRecommendations),
+        response_format=ProviderStrategy(CareerRecommendationsInitial),
         tools=[{"type": "web_search_preview"}]
     )
     
-    # Launch both concurrently
+    # Launch scenarios and initial careers concurrently
     scenarios_future = agent_scenarios.ainvoke({
         "messages": [
             ("system", SCENARIO_GENERATION_SYSTEM_PROMPT),
             ("human", f"Full Job Analysis Data:\n{analysis_summary_json}")
         ]
-    })
+    }, config={"run_name": "FutureScenariosAgent"})
     
-    careers_future = agent_careers.ainvoke({
+    careers_initial_future = agent_careers_initial.ainvoke({
         "messages": [
             ("system", CAREER_RECOMMENDATIONS_SYSTEM_PROMPT),
             ("human", f"Full Job Analysis Data:\n{analysis_summary_json}")
         ]
-    })
+    }, config={"run_name": "CareerRecommendationsAgent"})
     
-    result_scenarios, result_careers = await asyncio.gather(scenarios_future, careers_future)
+    result_scenarios, result_careers_initial = await asyncio.gather(scenarios_future, careers_initial_future)
+    
+    initial_recommendations: List[CareerOptionInitial] = result_careers_initial["structured_response"].recommendations
+    
+    # 5. Generate Roadmaps for each recommendation (Sequential or Parallel)
+    # We'll do parallel for speed
+    
+    async def process_career_option(option: CareerOptionInitial) -> CareerOption:
+        # Use the new local loop based function with mmdc
+        roadmap_code = await generate_roadmap_with_local_loop(option.job_title, job_context)
+        return CareerOption(
+            **option.model_dump(),
+            roadmap=roadmap_code
+        )
+
+    final_recommendations = await asyncio.gather(*[
+        process_career_option(opt) for opt in initial_recommendations
+    ])
     
     return {
         "task_automation_breakdown": task_automation_breakdown,
@@ -284,7 +444,7 @@ Education: {profile.education}"""
         "total_skill_automation": total_skill_automation,
         "weighted_final_score": weighted_final_score,
         "future_scenarios": result_scenarios["structured_response"].scenarios,
-        "career_recommendations": result_careers["structured_response"].recommendations
+        "career_recommendations": final_recommendations
     }
 
 if __name__ == "__main__":
