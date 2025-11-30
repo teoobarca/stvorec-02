@@ -63,6 +63,7 @@ Use the web search tool to find real-world trends, emerging technologies, or eco
 
 Each scenario should describe a potential evolution of the job in the age of AI.
 The scenarios should range from "Human-Centric Evolution" to "High Automation Integration".
+Avoid using bullet points in the description. Write it as a cohesive narrative paragraph.
 
 If a scenario implies high job displacement or negative outcomes, explicitly include an "Alternative Path" or "Pivot Suggestion" (e.g., adjacent professions, upskilling opportunities) within the description.
 
