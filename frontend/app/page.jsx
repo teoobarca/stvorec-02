@@ -12,7 +12,7 @@ export default function Home() {
       <main className="min-h-screen bg-black text-white selection:bg-purple-500/30">
         {/* <Navbar /> */}
         <HeroSection />
-        <div className="h-40 bg-gradient-to-b from-[#010412] via-[#000000] to-black"></div>
+        {/* <div className="h-40 bg-gradient-to-b from-[#010412] via-[#000000] to-black"></div> */}
 
         <UpdatedSections />
 

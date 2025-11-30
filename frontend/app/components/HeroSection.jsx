@@ -338,7 +338,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.05 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="-mt-7"
+              className="-mt-[100px]"
             >
               <div className="max-w-xl mx-auto">
                 <div className="relative">
@@ -357,7 +357,7 @@ export default function HeroSection() {
                       </h2>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 mb-3">
                       {/* Age */}
                       <div>
                         <label className="block text-sm font-medium text-zinc-300 mb-1.5">
@@ -365,15 +365,15 @@ export default function HeroSection() {
                         </label>
                         <input
                           type="text"
-                          value={profession}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            // Odstráň všetky otázníky z textu
-                            value = value.replace(/\?/g, "");
-                            setProfession(value);
-                          }}
-                          placeholder="Enter a profession (e.g. UX Designer)"
-                          className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-3 outline-none custom-placeholder"
+                          value={formData.age}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              age: e.target.value,
+                            })
+                          }
+                          placeholder="e.g., 25"
+                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                         />
                       </div>
 
@@ -391,68 +391,71 @@ export default function HeroSection() {
                               gender: e.target.value,
                             })
                           }
-                          placeholder="e.g., muž, žena, neuvedené"
+                          placeholder="e.g., Male, Female"
                           className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                         />
                       </div>
+                    </div>
 
-                      {/* Job Title */}
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                          Job Title
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.jobTitle}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              jobTitle: e.target.value,
-                            })
-                          }
-                          placeholder="e.g., UX Designer"
-                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
-                        />
-                      </div>
+                    {/* Job Title */}
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                        Job Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.jobTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            jobTitle: e.target.value,
+                          })
+                        }
+                        placeholder="e.g., UX Designer"
+                        className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                      />
+                    </div>
 
-                      {/* Job Description */}
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                          Job Description
-                        </label>
-                        <textarea
-                          value={formData.jobDescription}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              jobDescription: e.target.value,
-                            })
-                          }
-                          placeholder="Describe what you do in your role..."
-                          rows={3}
-                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
-                        />
-                      </div>
+                    {/* Job Description */}
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                        Job Description
+                      </label>
+                      <textarea
+                        value={formData.jobDescription}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            jobDescription: e.target.value,
+                          })
+                        }
+                        placeholder="Describe what you do in your role..."
+                        rows={1}
+                        className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
+                      />
+                    </div>
 
-                      {/* Daily Routine */}
-                      <div>
-                        <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                          Work Daily Routine
-                        </label>
-                        <textarea
-                          value={formData.dailyRoutine}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              dailyRoutine: e.target.value,
-                            })
-                          }
-                          placeholder="Describe your everyday tasks..."
-                          rows={3}
-                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
-                        />
-                      </div>
+                    {/* Daily Routine */}
+                    <div className="mb-3">
+                      <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                        Work Daily Routine
+                      </label>
+                      <textarea
+                        value={formData.dailyRoutine}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            dailyRoutine: e.target.value,
+                          })
+                        }
+                        placeholder="Describe your everyday tasks..."
+                        rows={4}
+                        className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
+                      />
+                    </div>
 
+                    {/* Location & Education Row */}
+                    <div className="grid grid-cols-2 gap-4 mb-3">
                       {/* Location */}
                       <div>
                         <label className="block text-sm font-medium text-zinc-300 mb-1.5">
@@ -467,15 +470,15 @@ export default function HeroSection() {
                               location: e.target.value,
                             })
                           }
-                          placeholder="e.g., Bratislava, Slovakia"
+                          placeholder="e.g., Bratislava"
                           className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                         />
                       </div>
 
                       {/* Education */}
-                      <div>
+                      <div className="mb-3">
                         <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-                          Education and Hobbies
+                          Education
                         </label>
                         <input
                           type="text"
@@ -486,42 +489,42 @@ export default function HeroSection() {
                               education: e.target.value,
                             })
                           }
-                          placeholder="e.g., Univerzita Komenského, Computer Science"
+                          placeholder="e.g., Computer Science"
                           className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                         />
                       </div>
-
-                      {/* Error Message */}
-                      {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm">
-                          {error}
-                        </div>
-                      )}
-
-                      {/* Submit Button */}
-                      <button
-                        onClick={handleAnalyze}
-                        disabled={
-                          isAnalyzing ||
-                          !formData.jobTitle ||
-                          !formData.jobDescription ||
-                          !formData.dailyRoutine
-                        }
-                        className="w-full hover:cursor-pointer bg-gradient-to-br from-white to-zinc-100 text-black px-6 py-3 rounded-xl font-medium hover:shadow-[0_10px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,0,0,0.15)] mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isAnalyzing ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            <span>Analyzing...</span>
-                          </>
-                        ) : (
-                          <>
-                            <span>Analyze My Job</span>
-                            <ArrowRight className="w-5 h-5" />
-                          </>
-                        )}
-                      </button>
                     </div>
+
+                    {/* Error Message */}
+                    {error && (
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm mb-3">
+                        {error}
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                      onClick={handleAnalyze}
+                      disabled={
+                        isAnalyzing ||
+                        !formData.jobTitle ||
+                        !formData.jobDescription ||
+                        !formData.dailyRoutine
+                      }
+                      className="w-full hover:cursor-pointer bg-gradient-to-br from-white to-zinc-100 text-black px-6 py-3 rounded-xl font-medium hover:shadow-[0_10px_40px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(0,0,0,0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isAnalyzing ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>Analyzing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Analyze My Job</span>
+                          <ArrowRight className="w-5 h-5" />
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
