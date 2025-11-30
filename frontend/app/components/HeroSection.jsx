@@ -217,11 +217,6 @@ export default function HeroSection() {
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
               <div className="max-w-4xl mx-auto text-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mt-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm text-zinc-300 mb-8 shadow-lg">
-                  <Sparkles className="w-4 h-4 text-blue-400" />
-                  <span>Analyze your profession</span>
-                </div>
-
                 <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
                   Will AI Replace{" "}
                   <span className="relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
