@@ -123,7 +123,7 @@ export default function HeroSection() {
       setError(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
 
-      const response = await fetch("http://localhost:8000/analyze", {
+      const response = await fetch("https://api-hack25.hamper.dev/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -270,7 +270,7 @@ export default function HeroSection() {
                       />
                       <button
                         type="submit"
-                        className="group/btn bg-white text-black w-9 h-9 rounded-full hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center flex-shrink-0 aspect-square mr-1"
+                        className="group/btn bg-white text-black hover:cursor-pointer w-9 h-9 rounded-full hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center flex-shrink-0 aspect-square mr-1"
                       >
                         <ArrowRight className="w-5 h-5 text-black" />
                       </button>

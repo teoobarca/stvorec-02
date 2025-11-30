@@ -88,7 +88,7 @@ function WhyItExists() {
   return (
     <section
       id="about"
-      className="scroll-mt-[20px] pb-24 md:pb-40 relative overflow-hidden"
+      className="scroll-mt-[20px] mt-20 pb-24  relative overflow-hidden"
     >
       {/* Background gradients */}
 
