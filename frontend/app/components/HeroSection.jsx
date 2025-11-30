@@ -225,12 +225,13 @@ export default function HeroSection() {
                 <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
                   Will AI Replace{" "}
                   <span className="relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
-                    {profession.trim().length > 0 ? profession : displayedText}
+                    {profession.trim().length > 0
+                      ? profession + "?"
+                      : displayedText}
                     <span className="animate-pulse relative text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-purple-500 to-blue-500">
                       |
                     </span>
                   </span>
-                  
                 </h1>
 
                 <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -308,7 +309,8 @@ export default function HeroSection() {
                     <Brain className="w-24 h-24 text-white mx-auto relative z-10 animate-pulse" />
                   </div>
                   <h3 className="text-xl font-medium text-zinc-400 mb-8 uppercase tracking-widest">
-                    Thinking<span className="inline-block w-4 text-left">{dots}</span>
+                    Thinking
+                    <span className="inline-block w-4 text-left">{dots}</span>
                   </h3>
                   <div className="h-40 overflow-hidden relative flex justify-center items-center mask-image-gradient">
                     <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10 pointer-events-none opacity-0" />
@@ -327,7 +329,8 @@ export default function HeroSection() {
                   </div>
                 </div>
               </div>
-            </motion.div> ) : (
+            </motion.div>
+          ) : (
             /* Form Section */
             <motion.div
               key="form"
@@ -362,15 +365,15 @@ export default function HeroSection() {
                         </label>
                         <input
                           type="text"
-                          value={formData.age}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              age: e.target.value,
-                            })
-                          }
-                          placeholder="e.g., 25 rokov"
-                          className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                          value={profession}
+                          onChange={(e) => {
+                            let value = e.target.value;
+                            // Odstráň všetky otázníky z textu
+                            value = value.replace(/\?/g, "");
+                            setProfession(value);
+                          }}
+                          placeholder="Enter a profession (e.g. UX Designer)"
+                          className="w-full bg-transparent border-none focus:ring-0 text-lg text-white placeholder-zinc-400 px-4 py-3 outline-none custom-placeholder"
                         />
                       </div>
 
