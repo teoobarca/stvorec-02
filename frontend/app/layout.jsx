@@ -22,16 +22,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <LenisProvider>
-      <html lang="en">
-        <Analytics />
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <LenisProvider>
+          <Analytics />
           {children}
-        </body>
+        </LenisProvider>
         <GoogleAnalytics gaId="G-3KVB89TV8S" />
-      </html>
-    </LenisProvider>
+      </body>
+    </html>
   );
 }
+
+
+
+
+
