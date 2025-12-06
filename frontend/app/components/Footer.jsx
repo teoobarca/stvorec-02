@@ -38,6 +38,7 @@ export default function Footer() {
     { label: "Introduction", href: "/" },
     { label: "About", href: "#about" },
     { label: "How It Works", href: "#how" },
+    { label: "Terms of Service", href: "/terms" },
   ];
 
   return (

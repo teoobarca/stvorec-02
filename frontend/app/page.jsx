@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import UpdatedSections from "./components/WhyItExists";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -36,21 +37,38 @@ export default function Home() {
             The best time to prepare for the AI revolution was yesterday. The
             second best time is now.
           </motion.p>
-          <motion.button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-            className="relative group hover:cursor-pointer bg-white text-black px-10 py-4 rounded-xl font-semibold overflow-hidden flex items-center gap-2 mx-auto text-lg shadow-lg hover:scale-105 duration-400"
-          >
-            {/* Text a ikona */}
-            <span className="relative z-10 flex items-center gap-2">
-              Start Analysis
-              <ArrowRight className="w-5 h-5" />
-            </span>
-          </motion.button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <motion.button
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+                className="relative group hover:cursor-pointer bg-white text-black px-10 py-4 rounded-xl font-semibold overflow-hidden flex items-center gap-2 text-lg shadow-lg hover:scale-105 duration-400"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Start Analysis
+                  <ArrowRight className="w-5 h-5" />
+                </span>
+              </motion.button>
+
+              <Link href="/blog">
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                  className="relative group hover:cursor-pointer bg-white/10 border border-white/20 text-white px-10 py-4 rounded-xl font-semibold overflow-hidden flex items-center gap-2 text-lg shadow-lg hover:scale-105 hover:bg-white/20 duration-400"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Read Blog
+                    <ArrowRight className="w-5 h-5" />
+                  </span>
+                </motion.button>
+              </Link>
+            </div>
         </div>
       </section>
 
